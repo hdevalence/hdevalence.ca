@@ -1,10 +1,16 @@
 {-# LANGUAGE OverloadedStrings #-}
 import Control.Arrow ((>>>))
+import Data.Monoid (mempty)
 
 import Hakyll
 
 main :: IO ()
 main = hakyll $ do
+    -- Twitter Bootstrap
+    match "css/bootstrap.css" $ route idRoute
+    create "css/bootstrap.css" $ constA mempty
+        >>> unixFilter "lessc" ["--compress", "bootstrap/less/bootstrap.less"]
+
     match "images/*" $ do
         route idRoute
         compile copyFileCompiler
@@ -18,5 +24,7 @@ main = hakyll $ do
             >>> applyTemplateCompiler "templates/post.hamlet"
             >>> applyTemplateCompiler "templates/blog.hamlet"
             >>> relativizeUrlsCompiler
+
+
 
 

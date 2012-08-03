@@ -1,7 +1,13 @@
 $doctype 5
 <html>
-    <head>
-        <title>#{title}
-    <body>
-        #{body}
+  <head>
+    <title>#{title}
+    <link href="/css/bootstrap.css" rel="stylesheet">
+  <body>
+    <div.container>
+      <div.row>
+        <div.span2>
+          #{sidebar}
+        <div.span8.offset2>
+          #{body}
 
