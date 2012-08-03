@@ -18,7 +18,7 @@ main = hakyll $ do
     match "templates/*" $ do 
         compile templateCompiler
 
-    match "posts/*" $ do
+    match "blog/*" $ do
         route $ setExtension "html"
         compile $ pageCompiler
             >>> applyTemplateCompiler "templates/post.hamlet"
