@@ -1,0 +1,12 @@
+body {
+    background-image: url("/images/milkyway.jpg");
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    color: #ddd;
+}
+
+.container {
+    margin-top: 10em;
+}
