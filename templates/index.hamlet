@@ -16,8 +16,8 @@ $doctype 5
             If you want to get in touch, #
             <a href="mailto:blog@hdevalence.ca">
               send me an email.
-          <p>
-            I post notes to myself #
-            <a href="/blog/">
-              here.
+          $#<p>
+          $#  I post notes to myself #
+          $#  <a href="/blog/">
+          $#    here.
 
