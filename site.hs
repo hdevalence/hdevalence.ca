@@ -7,7 +7,14 @@ import Control.Arrow ((>>>), (***), arr)
 import Data.Monoid (mempty, mconcat)
 import Data.List.Split (splitEvery)
 
+import Text.Pandoc (HTMLMathMethod(..), WriterOptions(..), defaultWriterOptions)
+
 import Hakyll
+
+pandocOptions :: WriterOptions
+pandocOptions = defaultHakyllWriterOptions
+    { writerHTMLMathMethod = MathJax ""
+    }
 
 main :: IO ()
 main = hakyll $ do
@@ -30,7 +37,7 @@ main = hakyll $ do
     -- Blog posts
     match "blog/*" $ do
         route $ setExtension "html"
-        compile $ pageCompiler
+        compile $ pageCompilerWith defaultHakyllParserState pandocOptions
             >>> applyTemplateCompiler "templates/post.hamlet"
             >>> applyTemplateCompiler "templates/blog.hamlet"
             >>> relativizeUrlsCompiler

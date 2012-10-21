@@ -1,3 +1,4 @@
-<div.post>
-  <h1>#{title}
-  #{body}
+<div.row.post>
+  <div.span6>
+    <h1>#{title}
+    #{body}

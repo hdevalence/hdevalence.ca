@@ -3,6 +3,7 @@ $doctype 5
   <head>
     <title>#{title}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400" rel="stylesheet" type="text/css">
     <link href="/css/bootstrap.css" rel="stylesheet">
     <link href="/css/index-style.css" rel="stylesheet">
   <body>
@@ -15,7 +16,8 @@ $doctype 5
             If you want to get in touch, #
             <a href="mailto:blog@hdevalence.ca">
               send me an email.
-            \ I post notes to myself #
+          <p>
+            I post notes to myself #
             <a href="/blog/">
               here.
 
