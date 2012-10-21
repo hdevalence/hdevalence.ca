@@ -3,11 +3,12 @@ $doctype 5
   <head>
     <title>#{title}
     <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/blog-style.css" rel="stylesheet">
   <body>
     <div.container>
       <div.row>
         <div.span2>
           #{sidebar}
-        <div.span8.offset2>
+        <div.span10>
           #{body}
 

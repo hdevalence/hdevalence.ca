@@ -39,7 +39,7 @@ main = hakyll $ do
     match "blog/index.html" $ route idRoute
     create "blog/index.html" $ constA mempty
         >>> arr (setField "title" "Henry de Valence :: Blog")
-        >>> requireAllA "blog/*.md" (id *** arr (reverse . sortByBaseName) >>> addPostList)
+        >>> requireAllA "blog/*.md" (id *** arr (reverse . chronological) >>> addPostShortList)
         >>> applyTemplateCompiler "templates/postlist.hamlet"
         >>> applyTemplateCompiler "templates/blog.hamlet"
         >>> relativizeUrlsCompiler
@@ -51,9 +51,17 @@ main = hakyll $ do
         >>> applyTemplateCompiler "templates/index.hamlet"
         >>> relativizeUrlsCompiler
 
-addPostList :: Compiler (Page String, [Page String]) (Page String)
-addPostList = setFieldA "list" $
-                    require "templates/post.hamlet" (\p t -> map (applyTemplate t) p)
+-- Adds list of posts with just the title.
+addPostShortList :: Compiler (Page String, [Page String]) (Page String)
+addPostShortList = setFieldA "postlist" $
+                require "templates/postshort.hamlet" (\p t -> map (applyTemplate t) p)
                 >>> arr mconcat
                 >>> arr pageBody
+{-
+addPostList :: Compiler (Page String, [Page String]) (Page String)
+addPostList = setFieldA "postlist" $
+                require "templates/post.hamlet" (\p t -> map (applyTemplate t) p)
+                >>> arr mconcat
+                >>> arr pageBody
+-}
 

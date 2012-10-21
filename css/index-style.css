@@ -5,6 +5,11 @@ body {
     background-size: cover;
     background-position: center;
     color: #ddd;
+    height: 100%;
+}
+
+html {
+    height: 100%;
 }
 
 .container {
