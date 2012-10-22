@@ -8,3 +8,10 @@ img.header {
 	margin: 0 auto;
 }
 
+.post span6 {
+	/* Disable font resizing in Android Chrome.*/
+	max-height: 1000000px;
+}
+
+
+
