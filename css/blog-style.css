@@ -13,5 +13,13 @@ img.header {
 	max-height: 1000000px;
 }
 
+.post {
+	text-align:justify;
+	-webkit-hyphens: auto;
+	-moz-hyphens: auto;
+	-ms-hyphens: auto;
+	hyphens: auto;
+}
+
 
 
