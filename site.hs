@@ -16,8 +16,13 @@ pandocOptions = defaultHakyllWriterOptions
     { writerHTMLMathMethod = MathJax ""
     }
 
+hakyllConfig :: HakyllConfiguration
+hakyllConfig = defaultHakyllConfiguration
+    { deployCommand = "s3cmd sync _site/ s3://www.hdevalence.ca/"
+    }
+
 main :: IO ()
-main = hakyll $ do
+main = hakyllWith hakyllConfig $ do
     -- CSS and Twitter Bootstrap
     match "css/bootstrap.css" $ route idRoute
     create "css/bootstrap.css" $ constA mempty
