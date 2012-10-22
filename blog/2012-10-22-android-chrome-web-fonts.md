@@ -20,7 +20,7 @@ options are:
 If you pick option 2, one method is described [here][2]: set
 `max-height: 1000000px;` in the CSS for the elements for which you
 want to disable the auto-sizing. This seems like a brittle hack, but
-it works, I guess. Perhaps in the future can use
+it works, I guess. Perhaps in the future we can use
 `text-size-adjust` (see [here][3]).
 
 [1]: http://code.google.com/p/chromium/issues/detail?id=138257
