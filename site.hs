@@ -21,6 +21,12 @@ hakyllConfig = defaultHakyllConfiguration
     { deployCommand = "s3cmd sync _site/ s3://www.hdevalence.ca/"
     }
 
+noTemplateCompiler :: Compiler Resource (Page String)
+noTemplateCompiler = readPageCompiler
+                 >>> addDefaultFields
+                 >>> pageReadPandoc
+                 >>> arr (fmap $ writePandocWith pandocOptions)
+
 main :: IO ()
 main = hakyllWith hakyllConfig $ do
     -- CSS and Twitter Bootstrap
@@ -42,7 +48,7 @@ main = hakyllWith hakyllConfig $ do
     -- Blog posts
     match "blog/*" $ do
         route $ setExtension "html"
-        compile $ pageCompilerWith defaultHakyllParserState pandocOptions
+        compile $ noTemplateCompiler
             >>> applyTemplateCompiler "templates/post.hamlet"
             >>> applyTemplateCompiler "templates/blog.hamlet"
             >>> relativizeUrlsCompiler
