@@ -18,7 +18,7 @@ pandocOptions = defaultHakyllWriterOptions
 
 hakyllConfig :: HakyllConfiguration
 hakyllConfig = defaultHakyllConfiguration
-    { deployCommand = "s3cmd sync _site/ s3://www.hdevalence.ca/"
+    { deployCommand = "s3cmd sync _site/ s3://www.hdevalence.ca/ --add-header='Cache-Control':'public, max-age 2592000'"
     }
 
 noTemplateCompiler :: Compiler Resource (Page String)
