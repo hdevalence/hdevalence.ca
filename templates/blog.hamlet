@@ -27,6 +27,11 @@ $doctype 5
         <div.span2>
           <a href="/blog/">
             <img.header src="/images/Weierstrass_p.png">
+          <small.tagline>
+            I’m #
+            <a href="/">
+              Henry de Valence
+            , and these are some assorted notes.
         <div.span10>
           #{body}
 
