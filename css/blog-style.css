@@ -13,7 +13,7 @@ img.header {
 	max-height: 1000000px;
 }
 
-.post {
+.post p {
 	text-align:justify;
 	-webkit-hyphens: auto;
 	-moz-hyphens: auto;
