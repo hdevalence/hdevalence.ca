@@ -2,3 +2,4 @@
   <div.span6>
     <h1>#{title}
     #{body}
+    <h2>Posted #{date}
