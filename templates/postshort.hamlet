@@ -1,8 +1,8 @@
 <div.row.postlist>
-  <div.span3>
+  <div.span2>
     <h2.title>
       #{date}
-  <div.span7>
+  <div.span8>
     <h2.title>
       <a href="#{url}">
         #{title}
