@@ -18,7 +18,7 @@ pandocOptions = defaultHakyllWriterOptions
 
 hakyllConfig :: HakyllConfiguration
 hakyllConfig = defaultHakyllConfiguration
-    { deployCommand = "s3cmd sync _site/ s3://www.hdevalence.ca/ --add-header='Cache-Control':'public, max-age 2592000'"
+    { deployCommand = "./deploy.sh"
     }
 
 noTemplateCompiler :: Compiler Resource (Page String)
@@ -46,8 +46,8 @@ main = hakyllWith hakyllConfig $ do
         compile templateCompiler
 
     -- Blog posts
-    match "blog/*" $ do
-        route $ setExtension "html"
+    match "blog/*.md" $ do
+        route $ setExtension ""
         compile $ noTemplateCompiler
             >>> applyTemplateCompiler "templates/post.hamlet"
             >>> applyTemplateCompiler "templates/blog.hamlet"
