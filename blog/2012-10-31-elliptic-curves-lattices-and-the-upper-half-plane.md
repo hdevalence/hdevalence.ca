@@ -54,7 +54,7 @@ denotes the omission of the zero term. We want to identify the elliptic
 curve $E : y^2 = 4x^3 + g_2x + g_3$ with the torus $\mathbb{C}/\Lambda$.
 To do this we need two facts: first, that that curve is actually an elliptic
 curve, and second, that the map
-$ z \mapsto (\wp(z),\wp'(z)) $ is an isomorphism of Riemann surfaces
+$z \mapsto (\wp(z),\wp'(z))$ is an isomorphism of Riemann surfaces
 that preserves the group structure. These facts are provided in
 AEC.VI.3.6.
 
