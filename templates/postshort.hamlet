@@ -1,8 +1,8 @@
 <div.row.postrow>
   <div.span6>
-    <h1.title>
+    <h3.title>
       <a href="#{url}">
         #{title}
   <div.span4>
-    <h1.title>
+    <h3.title>
       #{date}
