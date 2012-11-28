@@ -14,6 +14,5 @@ s3cmd sync _site/blog/ \
 echo Syncing other data
 s3cmd sync _site/ \
 	s3://www.hdevalence.ca/ \
-	--add-header='Cache-Control':'public, max-age 2592000' \
-	--delete-removed
+	--add-header='Cache-Control':'public, max-age 2592000'
 
