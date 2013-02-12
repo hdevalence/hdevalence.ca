@@ -8,7 +8,7 @@ echo Syncing html pages from blog
 s3cmd sync _site/blog/ \
 	s3://www.hdevalence.ca/blog/ \
 	--add-header='Cache-Control':'public, max-age 2592000' \
-	--mime-type='text/html' -M \
+	--mime-type='text/html' --guess-mime-type \
 	--delete-removed
 
 echo Syncing other data
