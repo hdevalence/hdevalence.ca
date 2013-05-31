@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>$title$
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400" rel="stylesheet" type="text/css">
+    <link href="/css/normalize.css" rel="stylesheet">
+    <link href="/css/foundation.css" rel="stylesheet">
+    <link href="/css/blog-style.css" rel="stylesheet">
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
+    </script>
+    <script type="text/javascript">      
+        MathJax.Hub.Config({          
+            "tex2jax": {
+                //Note: the below are transformed from $$ to $ by hakyll templates
+                inlineMath: [ ['$$','$$'], ['\\(','\\)'] ]
+            },
+            "HTML-CSS": {
+                availableFonts: ["TeX"],
+                imageFont: null,
+                scale: 95,
+                minScaleAdjust: 70,
+            },
+            jax: ["input/TeX","output/HTML-CSS"],    
+        });
+    </script>
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-28987042-1']);
+      _gaq.push(['_trackPageview']);
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </head>
+  <body>
+    <nav class="top-bar">
+      <ul class="title-area">
+         <li class="name">
+           <h1 class="titlelink">
+             <a href="/">Henry de Valence</a>
+           </h1>
+         <li class="menu-icon toggle-topbar">
+           <a href="#">Menu</a>
+         </li>
+      </ul>
+      <div class="top-bar-section">
+        <ul class="left">
+          <li class="divider">
+          </li>
+          <li>
+            <a href="/blog/">Blog</a>
+          </li>
+          <li class="divider">
+          </li>
+          <li>
+            <a href="http://www.flickr.com/photos/hdevalence">Flickr</a>
+          </li>
+          <li class="divider">
+          </li>
+          <li>
+            <a href="mailto:blog@hdevalence.ca">Email</a>
+          </li>
+          <li class="divider">
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="row">
+      <div class="large-12 columns">
+        $body$
+      </div>
+    </div>
+  </body>
+</html>

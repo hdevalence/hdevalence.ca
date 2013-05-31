@@ -2,84 +2,109 @@
 module Main where
 
 import Prelude hiding (id)
-import Control.Category (id)
-import Control.Arrow ((>>>), (***), arr)
-import Data.Monoid (mempty, mconcat)
-import Data.List.Split (splitEvery)
-
-import Text.Pandoc (HTMLMathMethod(..), WriterOptions(..), defaultWriterOptions)
+import Data.Monoid (mappend)
 
 import Hakyll
 
-pandocOptions :: WriterOptions
-pandocOptions = defaultHakyllWriterOptions
-    { writerHTMLMathMethod = MathJax ""
-    }
-
-hakyllConfig :: HakyllConfiguration
-hakyllConfig = defaultHakyllConfiguration
-    { deployCommand = "./deploy.sh"
-    }
-
-noTemplateCompiler :: Compiler Resource (Page String)
-noTemplateCompiler = readPageCompiler
-                 >>> addDefaultFields
-                 >>> pageReadPandoc
-                 >>> arr (fmap $ writePandocWith pandocOptions)
-
 main :: IO ()
-main = hakyllWith hakyllConfig $ do
-    -- CSS and Twitter Bootstrap
-    match "css/bootstrap.css" $ route idRoute
-    create "css/bootstrap.css" $ constA mempty
-        >>> unixFilter "lessc" ["--compress", "bootstrap/less/bootstrap.less"]
-    match "css/*" $ do
-        route idRoute
-        compile copyFileCompiler
-
-    -- Copy images
+main = hakyllWith config $ do
+    -- Images
     match "images/*" $ do
         route idRoute
         compile copyFileCompiler
 
-    match "templates/*" $ do 
-        compile templateCompiler
+    -- Stylesheets
+    match "css/*.scss" $ do
+        route   $ setExtension "css"
+        compile $ getResourceString >>=
+            withItemBody (unixFilter "sass" ["-s", "--trace", "--scss"]) >>=
+            return . fmap compressCss
 
-    -- Blog posts
-    match "blog/*.md" $ do
-        route $ setExtension ""
-        compile $ noTemplateCompiler
-            >>> applyTemplateCompiler "templates/post.hamlet"
-            >>> applyTemplateCompiler "templates/blog.hamlet"
-            >>> relativizeUrlsCompiler
+    -- Compile templates
+    match "templates/*" $ compile templateCompiler
+            
+    -- Main index
+    create ["index.html"] $ do
+        route idRoute
+        compile $ do
+            let indexContext = constField "title" 
+                                          "Henry de Valence"
+                     `mappend` defaultContext
+            makeItem ""
+                >>= applyAsTemplate indexContext
+                >>= loadAndApplyTemplate "templates/index.html"
+                                         indexContext
+                >>= relativizeUrls
 
-    -- Create the blog index page
-    match "blog/index.html" $ route idRoute
-    create "blog/index.html" $ constA mempty
-        >>> arr (setField "title" "Henry de Valence :: Blog")
-        >>> requireAllA "blog/*.md" (id *** arr (reverse . chronological) >>> addPostShortList)
-        >>> applyTemplateCompiler "templates/postlist.hamlet"
-        >>> applyTemplateCompiler "templates/blog.hamlet"
-        >>> relativizeUrlsCompiler
+    -- Compile Posts
+    match postPattern $ do
+        route $ setExtension ".html"
+        compile $ do
+            pandocCompiler
+                >>= saveSnapshot "content"
+                >>= return . fmap demoteHeaders
+                >>= loadAndApplyTemplate "templates/post.html"
+                                         postContext
+                >>= loadAndApplyTemplate "templates/index.html"
+                                         postContext
+                >>= relativizeUrls
 
-    -- Create the main page
-    match "index.html" $ route idRoute
-    create "index.html" $ constA mempty
-        >>> arr (setField "title" "Henry de Valence")
-        >>> applyTemplateCompiler "templates/index.hamlet"
-        >>> relativizeUrlsCompiler
+    -- Create blog index
+    create ["blog/index.html"] $ do
+        route idRoute
+        compile $ do
+            let listContext = (field "postlist" $ \_ -> postList recentFirst)
+                    `mappend` constField "title"
+                                         "Henry de Valence :: Blog"
+                    `mappend` defaultContext
+            makeItem ""
+                >>= applyAsTemplate listContext
+                >>= loadAndApplyTemplate "templates/postlist.html"
+                                         listContext
+                >>= loadAndApplyTemplate "templates/index.html"
+                                         listContext
+                >>= relativizeUrls
 
--- Adds list of posts with just the title.
-addPostShortList :: Compiler (Page String, [Page String]) (Page String)
-addPostShortList = setFieldA "postlist" $
-                require "templates/postshort.hamlet" (\p t -> map (applyTemplate t) p)
-                >>> arr mconcat
-                >>> arr pageBody
-{-
-addPostList :: Compiler (Page String, [Page String]) (Page String)
-addPostList = setFieldA "postlist" $
-                require "templates/post.hamlet" (\p t -> map (applyTemplate t) p)
-                >>> arr mconcat
-                >>> arr pageBody
--}
+    -- Create RSS feed
+    create ["rss.xml"] $ do
+        route idRoute
+        compile $ do
+            let feedContext = postContext `mappend` bodyField "description"
+            loadAllSnapshots postPattern "content"
+                >>= fmap (take 10) . recentFirst
+                >>= renderRss feedConfig feedContext 
+
+-------------------------------
+
+postPattern = ("blog/*.md" .||. "blog/*.markdown")
+
+
+
+postList :: ([Item String] -> Compiler [Item String])
+         -> Compiler String
+postList sortFilter = do
+    posts        <- sortFilter =<< loadAll postPattern
+    itemTemplate <- loadBody "templates/postshort.html"
+    list         <- applyTemplateList itemTemplate 
+                                      postContext 
+                                      posts
+    return list
+
+postContext :: Context String
+postContext = dateField "date" "%B %e, %Y" 
+    `mappend` defaultContext
+              
+-------------------------------
+
+feedConfig = FeedConfiguration
+    { feedTitle = "Henry de Valence :: Blog"
+    , feedDescription = "Blog of Henry de Valence"
+    , feedAuthorName = "Henry de Valence"
+    , feedAuthorEmail = "hdevalence@hdevalence.ca"
+    , feedRoot = "http://www.hdevalence.ca"
+    }
+
+config = defaultConfiguration
+    { deployCommand = "./deploy.sh"
+    }
 
