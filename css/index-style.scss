@@ -1,0 +1,30 @@
+/*
+body {
+    background-image: url("/images/milkyway.jpg");
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    color: #ddd;
+}
+*/
+
+html, body {
+    min-height: 100%;
+}
+
+.post span6 {
+	/* Disable font resizing in Android Chrome.*/
+	max-height: 1000000px;
+}
+
+.post p {
+	text-align:justify;
+	-webkit-hyphens: auto;
+	-moz-hyphens: auto;
+	-ms-hyphens: auto;
+	hyphens: auto;
+}
+
+
+

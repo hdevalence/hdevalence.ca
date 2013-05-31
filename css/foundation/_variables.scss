@@ -28,9 +28,9 @@ $experimental: true !default;
 
 $default-float: left;
 
-// $body-bg: #fff;
-// $body-font-color: #222;
-// $body-font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+$body-bg: #073642;
+$body-font-color: #eee8d5;
+$body-font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
 // $body-font-weight: normal;
 // $body-font-style: normal;
 
@@ -44,10 +44,10 @@ $default-float: left;
 
 // Colors
 
-// $primary-color: #2ba6cb;
-// $secondary-color: #e9e9e9;
-// $alert-color: #c60f13;
-// $success-color: #5da423;
+$primary-color: #268bd2;
+$secondary-color: #839496;
+$alert-color: #dc322f;
+$success-color: #859900;
 
 // Make sure border radius matches unless we want it different.
 
@@ -136,10 +136,10 @@ $default-float: left;
 
 // Heading font styles
 
-// $header-font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-// $header-font-weight: bold;
+$header-font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+$header-font-weight: normal;
 // $header-font-style: normal;
-// $header-font-color: #222;
+$header-font-color: #eee8d5;
 // $header-line-height: 1.4;
 // $header-top-margin: .2em;
 // $header-bottom-margin: .5em;
@@ -147,12 +147,12 @@ $default-float: left;
 
 // Heading font sizes
 
-// $h1-font-size: emCalc(44px);
-// $h2-font-size: emCalc(37px);
-// $h3-font-size: emCalc(27px);
-// $h4-font-size: emCalc(23px);
-// $h5-font-size: emCalc(18px);
-// $h6-font-size: 1em;
+$h1-font-size: 2.62em;
+$h2-font-size: 1.62em;
+$h3-font-size: 1em;
+$h4-font-size: 1em;
+$h5-font-size: 1em;
+$h6-font-size: 1em;
 
 // Subheaders
 
@@ -1202,7 +1202,7 @@ $default-float: left;
 
 // Background color for the top bar
 
-// $topbar-bg:                            #111 !default;
+$topbar-bg:                            #eee8d5 !default;
 
 // Height and margin
 
@@ -1216,29 +1216,29 @@ $default-float: left;
 // Controlling the styles for the title in the top bar
 
 // $topbar-title-weight:                  bold;
-// $topbar-title-font-size:               emCalc(17px);
+$topbar-title-font-size:               1em;
 
 // Style the top bar dropdown elements
 
-// $topbar-dropdown-bg:                   #222;
-// $topbar-dropdown-link-color:           #fff;
+$topbar-dropdown-bg:                   #073642;
+$topbar-dropdown-link-color:           #073642;
 // $topbar-dropdown-link-bg:              lighten($topbar-bg, 5%);
 // $topbar-dropdown-toggle-size:          5px;
-// $topbar-dropdown-toggle-color:         #fff;
+// $topbar-dropdown-toggle-color:         #073642;
 // $topbar-dropdown-toggle-alpha:         0.5;
 
 // Set the link colors and styles for top-level nav
 
-// $topbar-link-color:                    #fff;
-// $topbar-link-color-hover:              #fff;
-// $topbar-link-color-active:             #fff;
+$topbar-link-color:                    #073642;
+$topbar-link-color-hover:              #073642;
+$topbar-link-color-active:             #073642;
 // $topbar-link-weight:                   bold;
-// $topbar-link-font-size:                emCalc(13px);
+$topbar-link-font-size:                1em;
 // $topbar-link-hover-lightness:          -30%; // Darken by 30%
 // $topbar-link-bg-hover:                 darken($topbar-bg, 3%);
 // $topbar-link-bg-active:                darken($topbar-bg, 3%);
 
-// $topbar-dropdown-label-color:          #555;
+$topbar-dropdown-label-color:          #586e75;
 // $topbar-dropdown-label-text-transform: uppercase;
 // $topbar-dropdown-label-font-weight:    bold;
 // $topbar-dropdown-label-font-size:      emCalc(10px);
@@ -1248,10 +1248,10 @@ $default-float: left;
 // $topbar-menu-link-transform:           uppercase;
 // $topbar-menu-link-font-size:           emCalc(13px);
 // $topbar-menu-link-weight:              bold;
-// $topbar-menu-link-color:               #fff;
-// $topbar-menu-icon-color:               #fff;
-// $topbar-menu-link-color-toggled:       #888;
-// $topbar-menu-icon-color-toggled:       #888;
+$topbar-menu-link-color:               #073642;
+$topbar-menu-icon-color:               #073642;
+$topbar-menu-link-color-toggled:       #839496;
+$topbar-menu-icon-color-toggled:       #839496;
 
 // Transitions and breakpoint styles
 
