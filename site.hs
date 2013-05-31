@@ -1,8 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
-
-import Prelude hiding (id)
-import Data.Monoid (mappend)
+ 
+import           Prelude         hiding (id)
+import           Data.Monoid            (mappend)
+import qualified Text.Pandoc         as Pandoc
 
 import Hakyll
 
@@ -30,16 +31,16 @@ main = hakyllWith config $ do
             let indexContext = constField "title" 
                                           "Henry de Valence"
                      `mappend` defaultContext
-            pandocCompiler
+            myPandoc
                 >>= loadAndApplyTemplate "templates/index.html"
                                          indexContext
                 >>= relativizeUrls
 
     -- Compile Posts
     match postPattern $ do
-        route $ setExtension ".html"
+        route $ setExtension ""
         compile $ do
-            pandocCompiler
+            myPandoc
                 >>= saveSnapshot "content"
                 >>= return . fmap demoteHeaders
                 >>= loadAndApplyTemplate "templates/post.html"
@@ -77,7 +78,11 @@ main = hakyllWith config $ do
 
 postPattern = ("blog/*.md" .||. "blog/*.markdown")
 
-
+myPandoc = pandocCompilerWith defaultHakyllReaderOptions
+                              pandocOptions
+           where pandocOptions = defaultHakyllWriterOptions {
+                                 Pandoc.writerHTMLMathMethod = Pandoc.MathJax ""
+                                 }
 
 postList :: ([Item String] -> Compiler [Item String])
          -> Compiler String
