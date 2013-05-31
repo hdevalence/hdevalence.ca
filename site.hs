@@ -24,14 +24,13 @@ main = hakyllWith config $ do
     match "templates/*" $ compile templateCompiler
             
     -- Main index
-    create ["index.html"] $ do
-        route idRoute
+    match "index.markdown" $ do
+        route   $ setExtension ".html"
         compile $ do
             let indexContext = constField "title" 
                                           "Henry de Valence"
                      `mappend` defaultContext
-            makeItem ""
-                >>= applyAsTemplate indexContext
+            pandocCompiler
                 >>= loadAndApplyTemplate "templates/index.html"
                                          indexContext
                 >>= relativizeUrls
