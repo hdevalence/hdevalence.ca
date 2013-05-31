@@ -11,8 +11,17 @@ s3cmd sync _site/blog/ \
 	--mime-type='text/html' --guess-mime-type \
 	--delete-removed
 
+# We have to do this so the mime type will be set correctly.
+echo Syncing CSS
+s3cmd sync _site/css/ \
+	s3://www.hdevalence.ca/css/ \
+	--add-header='Cache-Control':'public, max-age 2592000' \
+	--mime-type='text/css' \
+	--delete-removed
+
 echo Syncing other data
 s3cmd sync _site/ \
 	s3://www.hdevalence.ca/ \
-	--add-header='Cache-Control':'public, max-age 2592000'
+	--add-header='Cache-Control':'public, max-age 2592000' \
+	--guess-mime-type
 
