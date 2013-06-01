@@ -1,8 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
- 
 import           Prelude         hiding (id)
-import           Data.Monoid            (mappend)
+import           Data.Monoid            (mappend, (<>))
 import qualified Text.Pandoc         as Pandoc
 
 import Hakyll
@@ -23,6 +22,9 @@ main = hakyllWith config $ do
 
     -- Compile templates
     match "templates/*" $ compile templateCompiler
+
+    -- Build tags
+    tags <- buildTags postPattern $ fromCapture "blog/tagged/*"
             
     -- Main index
     match "index.markdown" $ do
@@ -44,18 +46,17 @@ main = hakyllWith config $ do
                 >>= saveSnapshot "content"
                 >>= return . fmap demoteHeaders
                 >>= loadAndApplyTemplate "templates/post.html"
-                                         postContext
+                                         (postContext tags)
                 >>= loadAndApplyTemplate "templates/index.html"
-                                         postContext
+                                         (postContext tags)
                 >>= relativizeUrls
 
     -- Create blog index
     create ["blog/index.html"] $ do
         route idRoute
         compile $ do
-            let listContext = (field "postlist" $ \_ -> postList recentFirst)
-                    `mappend` constField "title"
-                                         "Henry de Valence :: Blog"
+            let listContext = (field "postlist" $ \_ -> postList tags postPattern recentFirst)
+                    `mappend` constField "title" "Henry de Valence :: Blog"
                     `mappend` defaultContext
             makeItem ""
                 >>= applyAsTemplate listContext
@@ -65,14 +66,36 @@ main = hakyllWith config $ do
                                          listContext
                 >>= relativizeUrls
 
+    -- Create tag pages
+    -- I've pretty much copied this from Jasper's example, and it should
+    -- be rewritten to eliminate duplicating the above.
+    tagsRules tags $ \tag pattern -> do
+        route idRoute
+        compile $ do
+            list <- postList tags pattern recentFirst
+            let tagContext = constField "title" ("Posts tagged " ++ tag)
+                          <> constField "postlist" list
+                          <> defaultContext
+            makeItem ""
+                >>= loadAndApplyTemplate "templates/postlist.html"
+                                         tagContext
+                >>= loadAndApplyTemplate "templates/index.html"
+                                         tagContext
+                >>= relativizeUrls
+
+        version "rss" $ do
+            route   $ setExtension "xml"
+            compile $ loadAllSnapshots pattern "content"
+                  >>= fmap (take 10) . recentFirst
+                  >>= renderRss feedConfig (feedContext tags)
+
     -- Create RSS feed
     create ["rss.xml"] $ do
         route idRoute
         compile $ do
-            let feedContext = postContext `mappend` bodyField "description"
             loadAllSnapshots postPattern "content"
                 >>= fmap (take 10) . recentFirst
-                >>= renderRss feedConfig feedContext 
+                >>= renderRss feedConfig (feedContext tags)
 
 -------------------------------
 
@@ -84,19 +107,25 @@ myPandoc = pandocCompilerWith defaultHakyllReaderOptions
                                  Pandoc.writerHTMLMathMethod = Pandoc.MathJax ""
                                  }
 
-postList :: ([Item String] -> Compiler [Item String])
+postList :: Tags 
+         -> Pattern
+         -> ([Item String] -> Compiler [Item String])
          -> Compiler String
-postList sortFilter = do
-    posts        <- sortFilter =<< loadAll postPattern
+postList tags pattern sortFilter = do
+    posts        <- sortFilter =<< loadAll pattern
     itemTemplate <- loadBody "templates/postshort.html"
     list         <- applyTemplateList itemTemplate 
-                                      postContext 
+                                      (postContext tags)
                                       posts
     return list
 
-postContext :: Context String
-postContext = dateField "date" "%B %e, %Y" 
-    `mappend` defaultContext
+postContext :: Tags -> Context String
+postContext tags = dateField "date" "%B %e, %Y" 
+         `mappend` tagsField "tags" tags
+         `mappend` defaultContext
+
+feedContext :: Tags -> Context String
+feedContext tags = (postContext tags) <> bodyField "description"
               
 -------------------------------
 
