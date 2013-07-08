@@ -230,9 +230,16 @@ $microformat-abbr-font-decoration:     none !default;
     line-height: inherit;
   }
 
+  pre {
+    margin: emCalc(20px) 0px;
+  }
+
   code {
+    overflow: scroll;
+    white-space: pre;
     font-family: $code-font-family;
     font-weight: $code-font-weight;
+    font-size: 90%;
     color: $code-color;
   }
 

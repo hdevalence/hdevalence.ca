@@ -1,3 +1,22 @@
+// Solarized colour names
+
+$base03:    #002b36;
+$base02:    #073642;
+$base01:    #586e75;
+$base00:    #657b83;
+$base0:     #839496;
+$base1:     #93a1a1;
+$base2:     #eee8d5;
+$base3:     #fdf6e3;
+$yellow:    #b58900;
+$orange:    #cb4b16;
+$red:       #dc322f;
+$magenta:   #d33682;
+$violet:    #6c71c4;
+$blue:      #268bd2;
+$cyan:      #2aa198;
+$green:     #859900;
+
 //
 // Foundation Variables
 //
@@ -28,8 +47,8 @@ $experimental: true !default;
 
 $default-float: left;
 
-$body-bg: #073642;
-$body-font-color: #eee8d5;
+$body-bg: $base02;
+$body-font-color: $base1;
 $body-font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
 // $body-font-weight: normal;
 // $body-font-style: normal;
@@ -44,10 +63,10 @@ $body-font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", Helvetica, 
 
 // Colors
 
-$primary-color: #268bd2;
-$secondary-color: #839496;
-$alert-color: #dc322f;
-$success-color: #859900;
+$primary-color: $blue;
+$secondary-color: $base00;
+$alert-color: $red;
+$success-color: $green;
 
 // Make sure border radius matches unless we want it different.
 
@@ -139,7 +158,7 @@ $success-color: #859900;
 $header-font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
 $header-font-weight: normal;
 // $header-font-style: normal;
-$header-font-color: #eee8d5;
+$header-font-color: $base1;
 // $header-line-height: 1.4;
 // $header-top-margin: .2em;
 // $header-bottom-margin: .5em;
@@ -174,15 +193,16 @@ $h6-font-size: 1em;
 // $paragraph-font-size: 1em;
 // $paragraph-line-height: 1.6;
 // $paragraph-margin-bottom: emCalc(20px);
+$paragraph-margin-bottom: 0px;
 // $paragraph-aside-font-size: emCalc(14px);
 // $paragraph-aside-line-height: 1.35;
 // $paragraph-aside-font-style: italic;
 
 // <code> tags
 
-// $code-color: darken($alert-color, 15%);
-// $code-font-family: Consolas, 'Liberation Mono', Courier, monospace;
-// $code-font-weight: bold;
+$code-color: $base00;
+$code-font-family: 'Source Code Pro', Consolas, 'Liberation Mono', Courier, monospace;
+$code-font-weight: normal;
 
 // Anchors
 
@@ -1202,7 +1222,7 @@ $h6-font-size: 1em;
 
 // Background color for the top bar
 
-$topbar-bg:                            #eee8d5 !default;
+$topbar-bg:                            $base0 !default;
 
 // Height and margin
 
@@ -1220,25 +1240,25 @@ $topbar-title-font-size:               1em;
 
 // Style the top bar dropdown elements
 
-$topbar-dropdown-bg:                   #073642;
-$topbar-dropdown-link-color:           #073642;
+$topbar-dropdown-bg:                   $base02;
+$topbar-dropdown-link-color:           $base02;
 // $topbar-dropdown-link-bg:              lighten($topbar-bg, 5%);
 // $topbar-dropdown-toggle-size:          5px;
-// $topbar-dropdown-toggle-color:         #073642;
+// $topbar-dropdown-toggle-color:         $base02;
 // $topbar-dropdown-toggle-alpha:         0.5;
 
 // Set the link colors and styles for top-level nav
 
-$topbar-link-color:                    #073642;
-$topbar-link-color-hover:              #073642;
-$topbar-link-color-active:             #073642;
+$topbar-link-color:                    $base02;
+$topbar-link-color-hover:              $base02;
+$topbar-link-color-active:             $base02;
 // $topbar-link-weight:                   bold;
 $topbar-link-font-size:                1em;
 // $topbar-link-hover-lightness:          -30%; // Darken by 30%
 // $topbar-link-bg-hover:                 darken($topbar-bg, 3%);
 // $topbar-link-bg-active:                darken($topbar-bg, 3%);
 
-$topbar-dropdown-label-color:          #586e75;
+$topbar-dropdown-label-color:          $base02;
 // $topbar-dropdown-label-text-transform: uppercase;
 // $topbar-dropdown-label-font-weight:    bold;
 // $topbar-dropdown-label-font-size:      emCalc(10px);
@@ -1248,10 +1268,10 @@ $topbar-dropdown-label-color:          #586e75;
 // $topbar-menu-link-transform:           uppercase;
 // $topbar-menu-link-font-size:           emCalc(13px);
 // $topbar-menu-link-weight:              bold;
-$topbar-menu-link-color:               #073642;
-$topbar-menu-icon-color:               #073642;
-$topbar-menu-link-color-toggled:       #839496;
-$topbar-menu-icon-color-toggled:       #839496;
+$topbar-menu-link-color:               $base02;
+$topbar-menu-icon-color:               $base02;
+$topbar-menu-link-color-toggled:       $base00;
+$topbar-menu-icon-color-toggled:       $base00;
 
 // Transitions and breakpoint styles
 
