@@ -80,8 +80,11 @@ makeRssFeed tags pattern = do
         >>= fmap (take 10) . recentFirst
         >>= renderRss feedConfig feedContext
 
-jsCompiler :: Item String -> Compiler (Item String)
-jsCompiler = withItemBody (unixFilter "jsmin" [])
+sassCompiler :: Item String -> Compiler (Item String)
+sassCompiler = withItemBody (unixFilter "sass" ["-s", "--trace", "--scss"])
+
+jsCompiler   :: Item String -> Compiler (Item String)
+jsCompiler   = withItemBody (unixFilter "jsmin" [])
 
 concatItems :: [Item String] -> Compiler (Item String)
 concatItems xs = makeItem $ concatMap itemBody xs
@@ -100,8 +103,8 @@ main = hakyllWith config $ do
     -- Stylesheets
     match "css/*.scss" $ do
         route   $ setExtension "css"
-        compile $ getResourceString 
-            >>= withItemBody (unixFilter "sass" ["-s", "--trace", "--scss"]) 
+        compile $ getResourceString
+            >>= sassCompiler
             >>= return . fmap compressCss
 
     -- Javascript
