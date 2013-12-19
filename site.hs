@@ -1,3 +1,7 @@
+--
+-- (C) 2012-2013 Henry de Valence <hdevalence@hdevalence.ca>
+-- This file available under the MIT licence.
+--
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 import           Prelude         hiding (id)
