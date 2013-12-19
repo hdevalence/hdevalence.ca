@@ -29,7 +29,11 @@ myPandoc = pandocCompilerWith defaultHakyllReaderOptions
            where pandocOptions = defaultHakyllWriterOptions {
                      Pandoc.writerHTMLMathMethod = Pandoc.MathJax ""
                      }
- 
+
+-- JS modules needed by Foundation.
+foundationMods :: [Identifier]
+foundationMods = ["js/foundation/foundation.topbar.js"]
+
 --------------------------------------
 -- Helper functions for building pages
 --------------------------------------
@@ -118,9 +122,9 @@ main = hakyllWith config $ do
         route idRoute
         compile $ do
             -- We have to load modules after the main js
-            foundation <- load "js/foundation/foundation.js"
-            modules <- loadAll "js/foundation/foundation.*.js"
-            concatItems (foundation:modules) >>= jsCompiler
+            core <- load "js/foundation/foundation.js"
+            mods <- mapM load foundationMods
+            concatItems (core:mods) >>= jsCompiler
 
     -- Compile templates
     match "templates/*" $ compile templateCompiler
