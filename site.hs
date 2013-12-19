@@ -80,6 +80,12 @@ makeRssFeed tags pattern = do
         >>= fmap (take 10) . recentFirst
         >>= renderRss feedConfig feedContext
 
+jsCompiler :: Item String -> Compiler (Item String)
+jsCompiler = withItemBody (unixFilter "jsmin" [])
+
+concatItems :: [Item String] -> Compiler (Item String)
+concatItems xs = makeItem $ concatMap itemBody xs
+
 ------------------------
 -- Main site description
 ------------------------
@@ -97,6 +103,21 @@ main = hakyllWith config $ do
         compile $ getResourceString 
             >>= withItemBody (unixFilter "sass" ["-s", "--trace", "--scss"]) 
             >>= return . fmap compressCss
+
+    -- Javascript
+    match "js/vendor/*" $ do
+        route idRoute
+        compile $ getResourceString >>= jsCompiler
+
+    -- Foundation Javascript: concatenate and minify
+    match "js/foundation/*.js" $ compile getResourceString
+    create ["js/foundation.min.js"] $ do
+        route idRoute
+        compile $ do
+            -- We have to load modules after the main js
+            foundation <- load "js/foundation/foundation.js"
+            modules <- loadAll "js/foundation/foundation.*.js"
+            concatItems (foundation:modules) >>= jsCompiler
 
     -- Compile templates
     match "templates/*" $ compile templateCompiler
