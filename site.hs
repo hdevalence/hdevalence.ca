@@ -26,7 +26,7 @@ config = defaultConfiguration
     { deployCommand = "./deploy.sh"
     }
 
-postPattern = ("blog/*.md" .||. "blog/*.markdown")
+postPattern = "blog/*.md" .||. "blog/*.markdown"
 
 myPandoc = pandocCompilerWith defaultHakyllReaderOptions
                               pandocOptions
@@ -55,10 +55,7 @@ postList :: Tags
 postList tags pattern sortFilter = do
     posts        <- sortFilter =<< loadAll pattern
     itemTemplate <- loadBody "templates/postshort.html"
-    list         <- applyTemplateList itemTemplate 
-                                      (postContext tags)
-                                      posts
-    return list
+    applyTemplateList itemTemplate (postContext tags) posts
 
 -- Creates a page with a list of posts in it. We use this for the main 
 -- blog index, as well as for the "posts tagged X" pages.
@@ -67,9 +64,9 @@ makeListPage :: Tags
              -> String
              -> Compiler (Item String)
 makeListPage tags pattern title = do
-    let listContext = (field "postlist" $ \_ -> postList tags 
-                                                         pattern 
-                                                         recentFirst)
+    let listContext = field "postlist" (\_ -> postList tags 
+                                                       pattern 
+                                                       recentFirst)
                    <> constField "title" title
                    <> defaultContext
     makeItem ""
@@ -82,8 +79,7 @@ makeRssFeed :: Tags
             -> Pattern
             -> Compiler (Item String)
 makeRssFeed tags pattern = do
-    let feedContext = (postContext tags)
-                   <> bodyField "description"
+    let feedContext = postContext tags <> bodyField "description"
     loadAllSnapshots pattern "content"
         >>= fmap (take 10) . recentFirst
         >>= renderRss feedConfig feedContext
