@@ -125,7 +125,7 @@ pdflatex item = do
 smallcaps :: String -> String
 smallcaps = foldr1 (++) .
             map (\word -> if word =~ ("^[A-Z][A-Z]+$" :: String)
-                          then "\\textsc{" ++ (map toLower word)
+                          then "\\textsc{" ++ map toLower word
                                            ++ "}"
                           else word) .
             split (oneOf " \n,.()")
@@ -217,10 +217,10 @@ main = hakyllWith config $ do
     match "cv.markdown" $ do
         route $ setExtension "pdf"
         compile $ getResourceBody
-            >>= (return . readPandoc)
-            >>= (return . fmap (Pandoc.writeLaTeX writerOptions))
-            >>= (return . fmap smallcaps)
-            >>= (return . fmap (replace "LaTeX" "\\LaTeX"))
+            >>= return . readPandoc
+            >>= return . fmap (Pandoc.writeLaTeX writerOptions)
+            >>= return . fmap smallcaps
+            >>= return . fmap (replace "LaTeX" "\\LaTeX")
             >>= loadAndApplyTemplate "templates/cv.tex" defaultContext
             >>= pdflatex
 
