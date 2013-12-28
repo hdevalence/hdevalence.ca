@@ -6,6 +6,10 @@
 module Main where
 import           Prelude         hiding (id)
 import           Data.Monoid            (mappend, (<>))
+import           Data.Char              (toLower)
+import           Data.List              (intercalate)
+import           Data.List.Split        (split, splitOn, oneOf)
+import           Text.Regex.Posix       ((=~))
 import qualified Text.Pandoc         as Pandoc
 import           System.Cmd             (system)
 import           System.FilePath        (replaceExtension, takeDirectory)
@@ -116,6 +120,19 @@ pdflatex item = do
         return ()
     makeItem $ TmpFile pdf
 
+-- Hacky smallcapsification for LaTeX.
+-- Converts all words longer than two capital letters to \textsc
+smallcaps :: String -> String
+smallcaps = foldr1 (++) .
+            map (\word -> if word =~ ("^[A-Z][A-Z]+$" :: String)
+                          then "\\textsc{" ++ (map toLower word)
+                                           ++ "}"
+                          else word) .
+            split (oneOf " \n,.()")
+
+replace :: String -> String -> String -> String
+replace old new = intercalate new . splitOn old
+
 ------------------------
 -- Main site description
 ------------------------
@@ -202,6 +219,8 @@ main = hakyllWith config $ do
         compile $ getResourceBody
             >>= (return . readPandoc)
             >>= (return . fmap (Pandoc.writeLaTeX writerOptions))
+            >>= (return . fmap smallcaps)
+            >>= (return . fmap (replace "LaTeX" "\\LaTeX"))
             >>= loadAndApplyTemplate "templates/cv.tex" defaultContext
             >>= pdflatex
 
