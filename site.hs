@@ -44,93 +44,6 @@ myPandoc = pandocCompilerWith defaultHakyllReaderOptions writerOptions
 foundationMods :: [Identifier]
 foundationMods = ["js/foundation/foundation.topbar.js"]
 
---------------------------------------
--- Helper functions for building pages
---------------------------------------
-
-postContext :: Tags -> Context String
-postContext tags = dateField "date" "%B %e, %Y" 
-                <> tagsField "tags" tags
-                <> defaultContext
-
--- Creates a list of posts with given tags, pattern, filter.
-postList :: Tags 
-         -> Pattern
-         -> ([Item String] -> Compiler [Item String])
-         -> Compiler String
-postList tags pattern sortFilter = do
-    posts        <- sortFilter =<< loadAll pattern
-    itemTemplate <- loadBody "templates/postshort.html"
-    applyTemplateList itemTemplate (postContext tags) posts
-
--- Creates a page with a list of posts in it. We use this for the main 
--- blog index, as well as for the "posts tagged X" pages.
-makeListPage :: Tags
-             -> Pattern
-             -> String
-             -> Compiler (Item String)
-makeListPage tags pattern title = do
-    let listContext = field "postlist" (\_ -> postList tags 
-                                                       pattern 
-                                                       recentFirst)
-                   <> constField "title" title
-                   <> defaultContext
-    makeItem ""
-        >>= loadAndApplyTemplate "templates/postlist.html" listContext
-        >>= loadAndApplyTemplate "templates/index.html" listContext
-        >>= relativizeUrls
-
--- Create an RSS feed for a list of posts.
-makeRssFeed :: Tags
-            -> Pattern
-            -> Compiler (Item String)
-makeRssFeed tags pattern = do
-    let feedContext = postContext tags <> bodyField "description"
-    loadAllSnapshots pattern "content"
-        >>= fmap (take 10) . recentFirst
-        >>= renderRss feedConfig feedContext
-
-sassCompiler :: Item String -> Compiler (Item String)
-sassCompiler = withItemBody (unixFilter "sass" ["-s", "--trace", "--scss"])
-
-jsCompiler   :: Item String -> Compiler (Item String)
-jsCompiler   = withItemBody (unixFilter "jsmin" [])
-
-concatItems :: [Item String] -> Compiler (Item String)
-concatItems xs = makeItem $ concatMap itemBody xs
-
--- Hacky approach copied from Jasper's site
-pdflatex :: Item String -> Compiler (Item TmpFile)
-pdflatex item = do 
-    TmpFile tex <- newTmpFile "pdflatex.tex"
-    let dir = takeDirectory tex
-        pdf = replaceExtension tex "pdf"
-    unsafeCompiler $ do
-        writeFile tex $ itemBody item
-        _ <- system $ unwords [ "pdflatex"
-                              , "-halt-on-error"
-                              , "-output-directory"
-                              , dir
-                              , tex
-                              , ">/dev/null"
-                              , "2>&1"
-                              ]
-        return ()
-    makeItem $ TmpFile pdf
-
--- Hacky smallcapsification for LaTeX.
--- Converts all words longer than two capital letters to \textsc
-smallcaps :: String -> String
-smallcaps = foldr1 (++) .
-            map (\word -> if word =~ ("^[A-Z][A-Z]+$" :: String)
-                          then "\\textsc{" ++ map toLower word
-                                           ++ "}"
-                          else word) .
-            split (oneOf " \n,.()")
-
-replace :: String -> String -> String -> String
-replace old new = intercalate new . splitOn old
-
 ------------------------
 -- Main site description
 ------------------------
@@ -221,4 +134,91 @@ main = hakyllWith config $ do
             >>= return . fmap (replace "LaTeX" "\\LaTeX")
             >>= loadAndApplyTemplate "templates/cv.tex" defaultContext
             >>= pdflatex
+
+--------------------------------------
+-- Helper functions for building pages
+--------------------------------------
+
+postContext :: Tags -> Context String
+postContext tags = dateField "date" "%B %e, %Y" 
+                <> tagsField "tags" tags
+                <> defaultContext
+
+-- Creates a list of posts with given tags, pattern, filter.
+postList :: Tags 
+         -> Pattern
+         -> ([Item String] -> Compiler [Item String])
+         -> Compiler String
+postList tags pattern sortFilter = do
+    posts        <- sortFilter =<< loadAll pattern
+    itemTemplate <- loadBody "templates/postshort.html"
+    applyTemplateList itemTemplate (postContext tags) posts
+
+-- Creates a page with a list of posts in it. We use this for the main 
+-- blog index, as well as for the "posts tagged X" pages.
+makeListPage :: Tags
+             -> Pattern
+             -> String
+             -> Compiler (Item String)
+makeListPage tags pattern title = do
+    let listContext = field "postlist" (\_ -> postList tags 
+                                                       pattern 
+                                                       recentFirst)
+                   <> constField "title" title
+                   <> defaultContext
+    makeItem ""
+        >>= loadAndApplyTemplate "templates/postlist.html" listContext
+        >>= loadAndApplyTemplate "templates/index.html" listContext
+        >>= relativizeUrls
+
+-- Create an RSS feed for a list of posts.
+makeRssFeed :: Tags
+            -> Pattern
+            -> Compiler (Item String)
+makeRssFeed tags pattern = do
+    let feedContext = postContext tags <> bodyField "description"
+    loadAllSnapshots pattern "content"
+        >>= fmap (take 10) . recentFirst
+        >>= renderRss feedConfig feedContext
+
+sassCompiler :: Item String -> Compiler (Item String)
+sassCompiler = withItemBody (unixFilter "sass" ["-s", "--trace", "--scss"])
+
+jsCompiler   :: Item String -> Compiler (Item String)
+jsCompiler   = withItemBody (unixFilter "jsmin" [])
+
+concatItems :: [Item String] -> Compiler (Item String)
+concatItems xs = makeItem $ concatMap itemBody xs
+
+-- Hacky approach copied from Jasper's site
+pdflatex :: Item String -> Compiler (Item TmpFile)
+pdflatex item = do 
+    TmpFile tex <- newTmpFile "pdflatex.tex"
+    let dir = takeDirectory tex
+        pdf = replaceExtension tex "pdf"
+    unsafeCompiler $ do
+        writeFile tex $ itemBody item
+        _ <- system $ unwords [ "pdflatex"
+                              , "-halt-on-error"
+                              , "-output-directory"
+                              , dir
+                              , tex
+                              , ">/dev/null"
+                              , "2>&1"
+                              ]
+        return ()
+    makeItem $ TmpFile pdf
+
+-- Hacky smallcapsification for LaTeX.
+-- Converts all words longer than two capital letters to \textsc
+smallcaps :: String -> String
+smallcaps = foldr1 (++) .
+            map (\word -> if word =~ ("^[A-Z][A-Z]+$" :: String)
+                          then "\\textsc{" ++ map toLower word
+                                           ++ "}"
+                          else word) .
+            split (oneOf " \n,.()")
+
+replace :: String -> String -> String -> String
+replace old new = intercalate new . splitOn old
 
