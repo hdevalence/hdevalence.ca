@@ -28,9 +28,7 @@ feedConfig = FeedConfiguration
     , feedRoot = "http://www.hdevalence.ca"
     }
 
-config = defaultConfiguration
-    { deployCommand = "./deploy.sh"
-    }
+config = defaultConfiguration { deployCommand = "./deploy.sh" }
 
 postPattern = "blog/*.md" .||. "blog/*.markdown"
 
