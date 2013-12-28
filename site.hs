@@ -7,6 +7,8 @@ module Main where
 import           Prelude         hiding (id)
 import           Data.Monoid            (mappend, (<>))
 import qualified Text.Pandoc         as Pandoc
+import           System.Cmd             (system)
+import           System.FilePath        (replaceExtension, takeDirectory)
 
 import Hakyll
 
@@ -28,11 +30,13 @@ config = defaultConfiguration
 
 postPattern = "blog/*.md" .||. "blog/*.markdown"
 
-myPandoc = pandocCompilerWith defaultHakyllReaderOptions
-                              pandocOptions
-           where pandocOptions = defaultHakyllWriterOptions {
-                     Pandoc.writerHTMLMathMethod = Pandoc.MathJax ""
-                     }
+writerOptions = defaultHakyllWriterOptions {
+                    Pandoc.writerHTMLMathMethod = Pandoc.MathJax ""
+                  , Pandoc.writerNumberSections = False
+                  , Pandoc.writerTeXLigatures   = True
+                  }
+
+myPandoc = pandocCompilerWith defaultHakyllReaderOptions writerOptions
 
 -- JS modules needed by Foundation.
 foundationMods :: [Identifier]
@@ -92,6 +96,25 @@ jsCompiler   = withItemBody (unixFilter "jsmin" [])
 
 concatItems :: [Item String] -> Compiler (Item String)
 concatItems xs = makeItem $ concatMap itemBody xs
+
+-- Hacky approach copied from Jasper's site
+pdflatex :: Item String -> Compiler (Item TmpFile)
+pdflatex item = do 
+    TmpFile tex <- newTmpFile "pdflatex.tex"
+    let dir = takeDirectory tex
+        pdf = replaceExtension tex "pdf"
+    unsafeCompiler $ do
+        writeFile tex $ itemBody item
+        _ <- system $ unwords [ "pdflatex"
+                              , "-halt-on-error"
+                              , "-output-directory"
+                              , dir
+                              , tex
+                              , ">/dev/null"
+                              , "2>&1"
+                              ]
+        return ()
+    makeItem $ TmpFile pdf
 
 ------------------------
 -- Main site description
@@ -173,4 +196,12 @@ main = hakyllWith config $ do
     create ["rss.xml"] $ do
         route idRoute
         compile $ makeRssFeed tags postPattern
+
+    match "cv.markdown" $ do
+        route $ setExtension "pdf"
+        compile $ getResourceBody
+            >>= (return . readPandoc)
+            >>= (return . fmap (Pandoc.writeLaTeX writerOptions))
+            >>= loadAndApplyTemplate "templates/cv.tex" defaultContext
+            >>= pdflatex
 
