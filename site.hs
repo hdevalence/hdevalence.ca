@@ -82,7 +82,7 @@ main = hakyllWith config $ do
 
     -- Build tags
     tags <- buildTags postPattern $ fromCapture "blog/tagged/*"
-            
+
     -- Main index
     match "index.markdown" $ do
         route   $ setExtension ".html"
@@ -140,12 +140,12 @@ main = hakyllWith config $ do
 --------------------------------------
 
 postContext :: Tags -> Context String
-postContext tags = dateField "date" "%B %e, %Y" 
+postContext tags = dateField "date" "%B %e, %Y"
                 <> tagsField "tags" tags
                 <> defaultContext
 
 -- Creates a list of posts with given tags, pattern, filter.
-postList :: Tags 
+postList :: Tags
          -> Pattern
          -> ([Item String] -> Compiler [Item String])
          -> Compiler String
@@ -154,15 +154,15 @@ postList tags pattern sortFilter = do
     itemTemplate <- loadBody "templates/postshort.html"
     applyTemplateList itemTemplate (postContext tags) posts
 
--- Creates a page with a list of posts in it. We use this for the main 
+-- Creates a page with a list of posts in it. We use this for the main
 -- blog index, as well as for the "posts tagged X" pages.
 makeListPage :: Tags
              -> Pattern
              -> String
              -> Compiler (Item String)
 makeListPage tags pattern title = do
-    let listContext = field "postlist" (\_ -> postList tags 
-                                                       pattern 
+    let listContext = field "postlist" (\_ -> postList tags
+                                                       pattern
                                                        recentFirst)
                    <> constField "title" title
                    <> defaultContext
@@ -192,7 +192,7 @@ concatItems xs = makeItem $ concatMap itemBody xs
 
 -- Hacky approach copied from Jasper's site
 pdflatex :: Item String -> Compiler (Item TmpFile)
-pdflatex item = do 
+pdflatex item = do
     TmpFile tex <- newTmpFile "pdflatex.tex"
     let dir = takeDirectory tex
         pdf = replaceExtension tex "pdf"
