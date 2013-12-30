@@ -55,6 +55,11 @@ main = hakyllWith config $ do
         route idRoute
         compile copyFileCompiler
 
+    -- Other files
+    match (fromList ["robots.txt"]) $ do
+        route idRoute
+        compile copyFileCompiler
+
     -- Stylesheets
     match "css/*.scss" $ do
         route   $ setExtension "css"
