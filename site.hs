@@ -1,5 +1,5 @@
 --
--- (C) 2012-2013 Henry de Valence <hdevalence@hdevalence.ca>
+-- (C) 2012-2014 Henry de Valence <hdevalence@hdevalence.ca>
 -- This file available under the MIT licence.
 --
 {-# LANGUAGE OverloadedStrings #-}
