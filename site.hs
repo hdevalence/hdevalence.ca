@@ -56,7 +56,7 @@ main = hakyllWith config $ do
         compile copyFileCompiler
 
     -- Other files
-    match (fromList ["robots.txt"]) $ do
+    match (fromList ["robots.txt", "favicon.ico"]) $ do
         route idRoute
         compile copyFileCompiler
 
