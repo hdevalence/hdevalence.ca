@@ -1,0 +1,25 @@
+s3_id: <%= ENV['S3_ID'] %>
+s3_secret: <%= ENV['S3_SECRET'] %>
+s3_bucket: www.hdevalence.ca
+
+max_age:
+  "images/*": <%= 60 * 60 * 24 %>
+  "*": <%= 60 * 5 %>
+
+gzip: true
+
+ignore_on_server: "etc/*"
+
+cloudfront_distribution_id: E18PR05E371IHK
+
+cloudfront_distribution_config:
+  default_cache_behavior:
+    min_TTL: <%= 60 * 60 * 24 %>
+  aliases:
+    quantity: 1
+    items:
+      CNAME: www.hdevalence.ca
+
+cloudfront_invalidate_root: true
+
+extensionless_mime_type: text/html
