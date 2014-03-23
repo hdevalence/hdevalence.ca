@@ -60,10 +60,12 @@ main = hakyllWith config $ do
         route idRoute
         compile copyFileCompiler
 
-    -- Stylesheets
-    match "css/*.scss" $ do
-        route   $ setExtension "css"
-        compile $ getResourceString
+    -- Stylesheets: concatentate, sass, minify.
+    match "css/*.scss" $ compile getResourceString
+    create ["css/style.css"] $ do
+        route idRoute
+        compile $ loadAll "css/*.scss"
+            >>= concatItems
             >>= sassCompiler
             >>= return . fmap compressCss
 
