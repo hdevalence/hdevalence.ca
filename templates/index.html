@@ -8,24 +8,7 @@
     <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400" rel="stylesheet" type="text/css">
     <link href='//fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
     <link href="/css/style.css" rel="stylesheet">
-    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
-    </script>
     <script src="/js/vendor/custom.modernizr.js"></script>
-    <script type="text/javascript">      
-        MathJax.Hub.Config({          
-            "tex2jax": {
-                //Note: the below are transformed to a single dollar sign by hakyll templates
-                inlineMath: [ ['$$','$$'], ['\\(','\\)'] ]
-            },
-            "HTML-CSS": {
-                availableFonts: ["TeX"],
-                imageFont: null,
-                scale: 95,
-                minScaleAdjust: 70,
-            },
-            jax: ["input/TeX","output/HTML-CSS"],    
-        });
-    </script>
     <script type="text/javascript">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-28987042-1']);
@@ -85,9 +68,33 @@
     </div>
     <script src="/js/vendor/jquery.js"></script>
     <script src="/js/foundation.min.js"></script>
-    <script>
-      //Note: transformed by templater
+    <script type="text/javascript">
+      //Set up Foundation ($$ transformed by templater)
       $$(document).foundation();
+
+      // Include MathJax dynamically.
+      (function () {
+        var head = document.getElementsByTagName("head")[0], script;
+        script = document.createElement("script");
+        script.type = "text/x-mathjax-config";
+        script[(window.opera ? "innerHTML" : "text")] =
+          "MathJax.Hub.Config({\n" +
+            //Note: the below are transformed to a single dollar sign by hakyll templates
+          "  'tex2jax': { inlineMath: [['$$','$$'], ['\\\\(','\\\\)']] },\n" +
+          "  'HTML-CSS': { availableFonts: ['TeX'], imageFont: null, scale: 95, minScaleAdjust: 70 },\n" +
+          "  'jax': ['input/TeX','output/HTML-CSS']\n" +
+          "});"
+        head.appendChild(script);
+        script = document.createElement("script");
+        script.type = "text/javascript";
+        var jaxPath = "/mathjax/latest/MathJax.js?config=TeX-AMS_HTML";
+        if ('https:' == document.location.protocol) {
+          script.src = "https://c328740.ssl.cf1.rackcdn.com" + jaxPath;
+        } else {
+          script.src = "http://cdn.mathjax.org" + jaxPath;
+        }
+        head.appendChild(script);
+      })();
     </script>
   </body>
 </html>
