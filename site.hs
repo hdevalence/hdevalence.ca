@@ -131,7 +131,6 @@ main = hakyllWith config $ do
                 >>= relativizeUrls
 
     match seminarPattern $ do
-        route   $ idRoute
         compile $ myPandoc
 
     -- Create tag pages
