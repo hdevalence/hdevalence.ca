@@ -31,6 +31,7 @@ feedConfig = FeedConfiguration
 config = defaultConfiguration { deployCommand = "s3_website push" }
 
 postPattern = "blog/*.md" .||. "blog/*.markdown"
+seminarPattern = "gradseminar/*.markdown"
 
 writerOptions = defaultHakyllWriterOptions {
                     Pandoc.writerHTMLMathMethod = Pandoc.MathJax ""
@@ -118,6 +119,21 @@ main = hakyllWith config $ do
         route idRoute
         compile $ makeListPage tags postPattern "Henry de Valence :: Blog"
 
+    match "seminar.markdown" $ do
+        route   $ constRoute "gradseminar/index.html"
+        compile $ do
+            let context = field "talklist" (\_ -> seminarList)
+                       <> constField "title" "Graduate Math Seminar"
+                       <> defaultContext
+            myPandoc
+                >>= loadAndApplyTemplate "templates/gradseminar.html" context
+                >>= loadAndApplyTemplate "templates/index.html" context
+                >>= relativizeUrls
+
+    match seminarPattern $ do
+        route   $ idRoute
+        compile $ myPandoc
+
     -- Create tag pages
     tagsRules tags $ \tag pattern -> do
         route idRoute
@@ -160,6 +176,14 @@ postList tags pattern sortFilter = do
     posts        <- sortFilter =<< loadAll pattern
     itemTemplate <- loadBody "templates/postshort.html"
     applyTemplateList itemTemplate (postContext tags) posts
+
+seminarList :: Compiler String
+seminarList = do
+    let talkContext = dateField "date" "%B %e, %Y"
+                   <> defaultContext
+    talks <- chronological =<< loadAll seminarPattern
+    talkTemplate <- loadBody "templates/seminartalk.html"
+    applyTemplateList talkTemplate talkContext talks
 
 -- Creates a page with a list of posts in it. We use this for the main
 -- blog index, as well as for the "posts tagged X" pages.
