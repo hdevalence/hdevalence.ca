@@ -91,12 +91,7 @@
         head.appendChild(script);
         script = document.createElement("script");
         script.type = "text/javascript";
-        var jaxPath = "/mathjax/latest/MathJax.js?config=TeX-AMS_HTML";
-        if ('https:' == document.location.protocol) {
-          script.src = "https://c328740.ssl.cf1.rackcdn.com" + jaxPath;
-        } else {
-          script.src = "http://cdn.mathjax.org" + jaxPath;
-        }
+        script.src = "//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML";
         head.appendChild(script);
       })();
     </script>
