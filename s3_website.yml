@@ -8,7 +8,9 @@ max_age:
 
 gzip: true
 
-ignore_on_server: "etc/*"
+ignore_on_server: 
+  - "etc/*"
+  - "projects/*"
 
 cloudfront_distribution_id: E18PR05E371IHK
 
