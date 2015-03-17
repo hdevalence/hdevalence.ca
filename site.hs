@@ -215,7 +215,8 @@ sassCompiler :: Item String -> Compiler (Item String)
 sassCompiler = withItemBody (unixFilter "sass" ["-s", "--trace", "--scss"])
 
 jsCompiler   :: Item String -> Compiler (Item String)
-jsCompiler   = withItemBody (unixFilter "jsmin" [])
+--jsCompiler   = withItemBody (unixFilter "jsmin" [])
+jsCompiler   = withItemBody return
 
 concatItems :: [Item String] -> Compiler (Item String)
 concatItems xs = makeItem $ concatMap itemBody xs
@@ -233,7 +234,7 @@ pdflatex item = do
                               , "-output-directory"
                               , dir
                               , tex
-                              , ">/dev/null"
+                              , ">/tmp/texlog"
                               , "2>&1"
                               ]
         return ()
